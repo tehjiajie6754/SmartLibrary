@@ -2,23 +2,37 @@
  * ============================================================
  * TASK 4 – ADT Designer: The Library Interface
  * ============================================================
- * This interface defines WHAT the library can do,
- * without revealing HOW it does it internally.
- * This is "Information Hiding" – the caller never needs
- * to know about the BST or Stack underneath.
+ * Defines WHAT the library can do without revealing HOW.
+ * Callers never need to know about the BST, HashMap indexes,
+ * Stack, Queue, or file I/O underneath.
  * ============================================================
  */
 public interface LibraryADT {
 
-    /** Add a new book to the catalogue */
-    void addBook(int isbn, String title, String author);
+    // --- Member management ---
+    void registerUser(String userId, String name);
 
-    /** Search for a book by its ISBN */
-    void searchBook(int isbn);
+    // --- Catalogue management (Admin) ---
+    void addBook(int isbn, String title, String author, String location, int quantity);
+    void removeBook(int isbn);
 
-    /** Borrow a book (move it from catalogue to history) */
-    void borrowBook(int isbn);
+    // --- Discovery ---
+    /** searchType: "isbn" | "title" | "author" */
+    void findBook(String query, String searchType);
 
-    /** View the borrowing history (most-recent first) */
-    void viewLatestHistory();
+    // --- Cart (staging area) ---
+    void addToCart(String userId, int isbn);
+    void removeFromCart(String userId, int isbn);
+    void viewCart(String userId);
+    void checkout(String userId);
+
+    // --- Borrowing lifecycle ---
+    void returnBook(String userId, int isbn);
+    void renewBook(String userId, int isbn);
+
+    // --- Reservation queue ---
+    void joinWaitlist(String userId, int isbn);
+
+    // --- History ---
+    void viewHistory();
 }

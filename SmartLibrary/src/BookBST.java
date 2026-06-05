@@ -1,151 +1,155 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * ============================================================
- * TASK 1 – Catalogue Architect: Binary Search Tree (BST)
- * TASK 3 – Record Finder: Recursive Search in the BST
+ * TASK 1 / TASK 3  –  Binary Search Tree (BST) Catalogue
  * ============================================================
- * WHY a BST?
- *   - Searching by ISBN is O(log n) on average.
- *   - Each node's LEFT children have smaller ISBNs.
- *   - Each node's RIGHT children have larger ISBNs.
+ * Primary index : BST keyed by ISBN  →  O(log n) lookup
+ * Secondary indexes (Option B HashMaps):
+ *   titleIndex  : lowercase-title  → ISBN   O(1) exact / O(k) partial
+ *   authorIndex : lowercase-author → List<ISBN>   (one author, many books)
  *
- * Visual example after inserting ISBNs 200, 100, 300, 150:
- *
- *            [200]
- *           /     \
- *        [100]   [300]
- *            \
- *           [150]
+ * Both maps are kept in sync on every insert / remove.
  * ============================================================
  */
 public class BookBST {
 
-    private Book root;   // the top of the tree (starts as null = empty)
+    private Book root;
+
+    // Secondary indexes
+    private final Map<String, Integer>       titleIndex  = new HashMap<>();
+    private final Map<String, List<Integer>> authorIndex = new HashMap<>();
 
     // ---------------------------------------------------------
-    // PUBLIC insert – the only method outside code calls
+    // INSERT
     // ---------------------------------------------------------
-    public void insert(int isbn, String title, String author) {
-        root = insertRecursive(root, isbn, title, author);
+    public void insert(Book book) {
+        root = insertRecursive(root, book);
+        addToIndex(book);
     }
 
-    /**
-     * PRIVATE recursive helper for insert.
-     *
-     * Logic (very simple):
-     *   1. If we reach a null spot → create the new Book here.
-     *   2. If isbn < current node → go LEFT.
-     *   3. If isbn > current node → go RIGHT.
-     *   4. If isbn == current node → duplicate, do nothing.
-     *   5. Return the (possibly updated) node back up.
-     */
-    private Book insertRecursive(Book node, int isbn, String title, String author) {
-        // Base case: empty spot found – place the new book here
-        if (node == null) {
-            return new Book(isbn, title, author);
-        }
+    private Book insertRecursive(Book node, Book book) {
+        if (node == null) return book;
+        if (book.isbn < node.isbn) node.left  = insertRecursive(node.left,  book);
+        else if (book.isbn > node.isbn) node.right = insertRecursive(node.right, book);
+        // duplicate isbn: silently ignore
+        return node;
+    }
 
-        if (isbn < node.isbn) {
-            // ISBN is smaller → go to the left subtree
-            node.left = insertRecursive(node.left, isbn, title, author);
-        } else if (isbn > node.isbn) {
-            // ISBN is larger → go to the right subtree
-            node.right = insertRecursive(node.right, isbn, title, author);
-        }
-        // else: isbn == node.isbn → duplicate, we simply ignore it
+    private void addToIndex(Book book) {
+        titleIndex.put(book.title.toLowerCase(), book.isbn);
+        authorIndex
+            .computeIfAbsent(book.author.toLowerCase(), k -> new ArrayList<>())
+            .add(book.isbn);
+    }
 
-        return node;  // return the unchanged (or updated) node
+    private void removeFromIndex(Book book) {
+        titleIndex.remove(book.title.toLowerCase());
+        List<Integer> byAuthor = authorIndex.get(book.author.toLowerCase());
+        if (byAuthor != null) {
+            byAuthor.remove(Integer.valueOf(book.isbn));
+            if (byAuthor.isEmpty()) authorIndex.remove(book.author.toLowerCase());
+        }
     }
 
     // ---------------------------------------------------------
-    // PUBLIC search – TASK 3: Recursive search  O(log n)
+    // SEARCH by ISBN  (primary key, O(log n))
     // ---------------------------------------------------------
     public Book search(int isbn) {
         return searchRecursive(root, isbn);
     }
 
-    /**
-     * PRIVATE recursive helper for search.
-     *
-     * Logic:
-     *   1. If node is null → book not found, return null.
-     *   2. If isbn matches → found it! return this node.
-     *   3. If isbn < node → search LEFT.
-     *   4. If isbn > node → search RIGHT.
-     */
     private Book searchRecursive(Book node, int isbn) {
-        // Base case 1: reached a dead end → not found
-        if (node == null) {
-            return null;
-        }
-
-        // Base case 2: found the book!
-        if (isbn == node.isbn) {
-            return node;
-        }
-
-        // Recursive step: decide which half to search
-        if (isbn < node.isbn) {
-            return searchRecursive(node.left, isbn);   // search left
-        } else {
-            return searchRecursive(node.right, isbn);  // search right
-        }
+        if (node == null)          return null;
+        if (isbn == node.isbn)     return node;
+        if (isbn < node.isbn)      return searchRecursive(node.left,  isbn);
+        return searchRecursive(node.right, isbn);
     }
 
     // ---------------------------------------------------------
-    // PUBLIC remove – needed for borrowing (TASK 5)
+    // SEARCH by Title  (secondary index, O(1) exact + O(k) partial)
+    // ---------------------------------------------------------
+    public List<Book> searchByTitle(String query) {
+        List<Book> results = new ArrayList<>();
+        String q = query.toLowerCase();
+        for (Map.Entry<String, Integer> e : titleIndex.entrySet()) {
+            if (e.getKey().contains(q)) {
+                Book b = search(e.getValue());
+                if (b != null) results.add(b);
+            }
+        }
+        return results;
+    }
+
+    // ---------------------------------------------------------
+    // SEARCH by Author  (secondary index)
+    // ---------------------------------------------------------
+    public List<Book> searchByAuthor(String query) {
+        List<Book> results = new ArrayList<>();
+        String q = query.toLowerCase();
+        for (Map.Entry<String, List<Integer>> e : authorIndex.entrySet()) {
+            if (e.getKey().contains(q)) {
+                for (int isbn : e.getValue()) {
+                    Book b = search(isbn);
+                    if (b != null) results.add(b);
+                }
+            }
+        }
+        return results;
+    }
+
+    // ---------------------------------------------------------
+    // REMOVE
     // ---------------------------------------------------------
     public void remove(int isbn) {
+        Book toRemove = search(isbn);
+        if (toRemove != null) removeFromIndex(toRemove);
         root = removeRecursive(root, isbn);
     }
 
-    /**
-     * PRIVATE recursive helper for remove.
-     *
-     * Three cases when we find the node to delete:
-     *   Case 1: Leaf node (no children)        → just remove it.
-     *   Case 2: One child                      → replace with that child.
-     *   Case 3: Two children                   → replace with the
-     *           smallest value in the right subtree (in-order successor).
-     */
     private Book removeRecursive(Book node, int isbn) {
-        if (node == null) {
-            return null;  // ISBN not in tree
-        }
-
+        if (node == null) return null;
         if (isbn < node.isbn) {
-            node.left = removeRecursive(node.left, isbn);
+            node.left  = removeRecursive(node.left,  isbn);
         } else if (isbn > node.isbn) {
             node.right = removeRecursive(node.right, isbn);
         } else {
-            // *** Found the node to remove ***
+            // Found – three cases
+            if (node.left  == null) return node.right;
+            if (node.right == null) return node.left;
 
-            // Case 1 & 2: zero or one child
-            if (node.left == null) {
-                return node.right;   // right child (or null) takes over
-            }
-            if (node.right == null) {
-                return node.left;    // left child takes over
-            }
-
-            // Case 3: two children
-            // Find the smallest ISBN in the RIGHT subtree
+            // Two children: replace with in-order successor (leftmost of right subtree)
             Book successor = findMin(node.right);
-            // Copy successor's data into this node
-            node.isbn   = successor.isbn;
-            node.title  = successor.title;
-            node.author = successor.author;
-            // Delete the successor from the right subtree
-            node.right = removeRecursive(node.right, successor.isbn);
+            node.isbn     = successor.isbn;
+            node.title    = successor.title;
+            node.author   = successor.author;
+            node.location = successor.location;
+            node.copies   = successor.copies;
+            node.waitlist = successor.waitlist;
+            node.right    = removeRecursive(node.right, successor.isbn);
         }
-
         return node;
     }
 
-    /** Find the leftmost (smallest) node in a subtree */
     private Book findMin(Book node) {
-        while (node.left != null) {
-            node = node.left;
-        }
+        while (node.left != null) node = node.left;
         return node;
+    }
+
+    // ---------------------------------------------------------
+    // Collect all books in sorted ISBN order (for persistence)
+    // ---------------------------------------------------------
+    public void getAllBooks(List<Book> list) {
+        collectInOrder(root, list);
+    }
+
+    private void collectInOrder(Book node, List<Book> list) {
+        if (node == null) return;
+        collectInOrder(node.left, list);
+        list.add(node);
+        collectInOrder(node.right, list);
     }
 }

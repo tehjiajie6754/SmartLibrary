@@ -1,39 +1,84 @@
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 /**
  * ============================================================
- * Entity Class: Book
+ * Entity Class: Book  (also serves as BST node)
  * ============================================================
- * Each Book object doubles as a BST node because it has
- * `left` and `right` pointers.  This keeps things simple —
- * one class serves both as data AND tree structure.
+ * Each Book represents one ISBN (title + metadata).
+ * Multiple physical copies are stored in the `copies` list.
+ * Users waiting for an unavailable book queue in `waitlist`.
  *
- *        [ISBN 200]           ← root
+ * BST ordering is still by ISBN:
+ *        [ISBN 200]
  *        /        \
- *   [ISBN 100]  [ISBN 300]   ← left child < parent < right child
+ *   [ISBN 100]  [ISBN 300]
  * ============================================================
  */
 public class Book {
 
-    // --- Book data ---
-    int isbn;
+    // --- Book metadata ---
+    int    isbn;
     String title;
     String author;
+    String location;      // e.g. "Aisle 2 / Shelf B"
 
-    // --- BST pointers (left child, right child) ---
+    // --- Multiple physical copies ---
+    List<Copy>    copies;
+
+    // --- Reservation queue (userIds waiting) ---
+    Queue<String> waitlist;
+
+    // --- BST pointers ---
     Book left;
     Book right;
 
-    /** Constructor – simply stores the three fields */
-    public Book(int isbn, String title, String author) {
-        this.isbn   = isbn;
-        this.title  = title;
-        this.author = author;
-        this.left   = null;   // no children yet
-        this.right  = null;
+    public Book(int isbn, String title, String author, String location) {
+        this.isbn     = isbn;
+        this.title    = title;
+        this.author   = author;
+        this.location = location;
+        this.copies   = new ArrayList<>();
+        this.waitlist = new LinkedList<>();
+        this.left     = null;
+        this.right    = null;
     }
 
-    /** Handy method to print book info */
+    public void addCopy(Copy copy) {
+        copies.add(copy);
+    }
+
+    public int totalCopies() {
+        return copies.size();
+    }
+
+    public int availableCount() {
+        int n = 0;
+        for (Copy c : copies) if (c.isAvailable()) n++;
+        return n;
+    }
+
+    /** Returns the first available Copy, or null if all are borrowed. */
+    public Copy getAvailableCopy() {
+        for (Copy c : copies) if (c.isAvailable()) return c;
+        return null;
+    }
+
+    /** Returns the Copy currently borrowed by the given userId, or null. */
+    public Copy getCopyBorrowedBy(String userId) {
+        for (Copy c : copies) {
+            if (userId.equals(c.borrowerId)) return c;
+        }
+        return null;
+    }
+
     @Override
     public String toString() {
-        return "ISBN: " + isbn + " | Title: " + title + " | Author: " + author;
+        return String.format(
+            "ISBN: %-6d | %-35s | %-22s | Location: %-20s | Available: %d/%d",
+            isbn, title, author, location, availableCount(), totalCopies()
+        );
     }
 }
