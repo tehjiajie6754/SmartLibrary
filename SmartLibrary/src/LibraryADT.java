@@ -11,10 +11,13 @@ public interface LibraryADT {
 
     // --- Member management ---
     void registerUser(String userId, String name);
+    void removeMember(String userId);
+    void listAllMembers();
 
     // --- Catalogue management (Admin) ---
     void addBook(int isbn, String title, String author, String location, String genre, int quantity);
     void removeBook(int isbn);
+    void updateBook(int isbn, String newTitle, String newAuthor, String newLocation, String newGenre);
 
     // --- Discovery ---
     /** searchType: "isbn" | "title" | "author" */
@@ -32,11 +35,24 @@ public interface LibraryADT {
 
     // --- Reservation queue ---
     void joinWaitlist(String userId, int isbn);
+    void leaveWaitlist(String userId, int isbn);
 
     // --- Analytics ---
     void displayHottestBooks();
     void recommendBooks(String userId);
+    void viewMonthlyReport(int year, int month);
+
+    // --- Ratings ---
+    void rateBook(String userId, int isbn, int stars);
+
+    // --- Catalogue browsing ---
+    void listAllBooks();
+    void displayOverdueReport();
+
+    // --- Profile ---
+    void viewUserProfile(String userId);
 
     // --- History ---
     void viewHistory();
+    void viewPersonalHistory(String userId);
 }

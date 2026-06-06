@@ -163,6 +163,29 @@ public class BookBST {
     }
 
     // ---------------------------------------------------------
+    // REINDEX  (call after mutating title / author / genre on a book)
+    // ---------------------------------------------------------
+    public void reindex(Book book, String oldTitle, String oldAuthor, String oldGenre) {
+        // Remove stale entries
+        titleIndex.remove(oldTitle.toLowerCase());
+
+        List<Integer> byAuthor = authorIndex.get(oldAuthor.toLowerCase());
+        if (byAuthor != null) {
+            byAuthor.remove(Integer.valueOf(book.isbn));
+            if (byAuthor.isEmpty()) authorIndex.remove(oldAuthor.toLowerCase());
+        }
+
+        List<Integer> byGenre = genreIndex.get(oldGenre.toLowerCase());
+        if (byGenre != null) {
+            byGenre.remove(Integer.valueOf(book.isbn));
+            if (byGenre.isEmpty()) genreIndex.remove(oldGenre.toLowerCase());
+        }
+
+        // Add fresh entries
+        addToIndex(book);
+    }
+
+    // ---------------------------------------------------------
     // Collect all books in sorted ISBN order (for persistence + hottest)
     // ---------------------------------------------------------
     public void getAllBooks(List<Book> list) {

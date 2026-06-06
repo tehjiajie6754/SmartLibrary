@@ -22,13 +22,15 @@ public class User {
     List<String>         borrowedKeys;
     Map<String, Integer> genreCounts;
     Set<Integer>         readHistory;
+    double               outstandingFine;
 
     public User(String userId, String name) {
         this.userId       = userId;
         this.name         = name;
-        this.borrowedKeys = new ArrayList<>();
-        this.genreCounts  = new HashMap<>();
-        this.readHistory  = new HashSet<>();
+        this.borrowedKeys   = new ArrayList<>();
+        this.genreCounts    = new HashMap<>();
+        this.readHistory    = new HashSet<>();
+        this.outstandingFine = 0.0;
     }
 
     public boolean canBorrow() {

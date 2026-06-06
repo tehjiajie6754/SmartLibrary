@@ -1,0 +1,25 @@
+25006757 | The Hitchhiker's Guide to the Galaxy | 1002 | 1 | 2026-04-10 | Sci-Fi
+25006805 | 1984 | 1009 | 2 | 2026-04-15 | Classic
+25006739 | The Girl with the Dragon Tattoo | 1005 | 1 | 2026-04-20 | Mystery
+25006754 | Gone Girl | 1016 | 1 | 2026-04-22 | Thriller
+25006001 | Sapiens | 1011 | 1 | 2026-04-28 | Non-Fiction
+25006757 | Sapiens | 1011 | 2 | 2026-05-03 | Non-Fiction
+25006805 | To Kill a Mockingbird | 1010 | 1 | 2026-05-05 | Classic
+25006001 | Thinking, Fast and Slow | 1012 | 1 | 2026-05-08 | Non-Fiction
+25006754 | It | 1013 | 1 | 2026-05-10 | Horror
+25006739 | A Study in Scarlet | 1006 | 1 | 2026-05-13 | Mystery
+25006757 | Guns, Germs, and Steel | 1017 | 1 | 2026-05-15 | History
+25006805 | Dune | 1001 | 2 | 2026-05-18 | Sci-Fi
+25006001 | The Hobbit | 1003 | 2 | 2026-05-20 | Fantasy
+25006001 | Dune | 1001 | 1 | 2026-05-22 | Sci-Fi
+25006754 | The Da Vinci Code | 1015 | 1 | 2026-05-22 | Thriller
+25006739 | The Da Vinci Code | 1015 | 2 | 2026-05-25 | Thriller
+25006739 | 1984 | 1009 | 1 | 2026-05-27 | Classic
+25006757 | A Short History of Nearly Everything | 1018 | 1 | 2026-05-28 | History
+25006805 | The Hobbit | 1003 | 1 | 2026-06-01 | Fantasy
+25006757 | Harry Potter and the Philosopher's Stone | 1004 | 1 | 2026-06-02 | Fantasy
+25006757 | Dune | 1001 | 1 | 2026-06-03 | Sci-Fi
+25006001 | The Da Vinci Code | 1015 | 1 | 2026-06-04 | Thriller
+25006739 | Harry Potter and the Philosopher's Stone | 1004 | 3 | 2026-06-04 | Fantasy
+25006001 | Harry Potter and the Philosopher's Stone | 1004 | 2 | 2026-06-05 | Fantasy
+25006805 | The Da Vinci Code | 1015 | 2 | 2026-06-06 | Thriller
