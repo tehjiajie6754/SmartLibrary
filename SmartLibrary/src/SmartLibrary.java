@@ -280,7 +280,7 @@ public class SmartLibrary implements LibraryADT {
         int i = 1;
         for (int isbn : cart.getItems()) {
             Book b = catalogue.search(isbn);
-            System.out.println("  " + i++ + ". ISBN " + isbn + " – " +
+            System.out.println("  " + i++ + ". ISBN " + isbn + " | " +
                     ((b != null) ? "\"" + b.title + "\"" : "(book not found)"));
         }
     }

@@ -1,1 +1,74 @@
-101 | Harry Porter | J. K. Rowling | AVAILABLE
+BOOK | 1001 | Dune | Frank Herbert | Aisle 1 / Shelf A | Sci-Fi | 15
+COPY | 1 | 25006757 | 2026-06-03 | 2026-06-10 | false
+COPY | 2 | null | null | null | false
+RATING | 25006757 | 5
+RATING | 25006805 | 3
+RATING | 25006001 | 5
+BOOK | 1002 | The Hitchhiker's Guide to the Galaxy | Douglas Adams | Aisle 1 / Shelf A | Sci-Fi | 8
+COPY | 1 | null | null | null | false
+RATING | 25006805 | 3
+RATING | 25006757 | 4
+BOOK | 1003 | The Hobbit | J.R.R. Tolkien | Aisle 1 / Shelf B | Fantasy | 18
+COPY | 1 | 25006805 | 2026-06-01 | 2026-06-08 | false
+COPY | 2 | null | null | null | false
+RATING | 25006805 | 5
+RATING | 25006001 | 4
+BOOK | 1004 | Harry Potter and the Philosopher's Stone | J.K. Rowling | Aisle 1 / Shelf B | Fantasy | 22
+COPY | 1 | 25006757 | 2026-06-02 | 2026-06-09 | false
+COPY | 2 | 25006001 | 2026-06-05 | 2026-06-12 | false
+COPY | 3 | 25006739 | 2026-06-04 | 2026-06-11 | false
+RATING | 25006757 | 3
+RATING | 25006001 | 4
+RATING | 25006739 | 5
+BOOK | 1005 | The Girl with the Dragon Tattoo | Stieg Larsson | Aisle 2 / Shelf A | Mystery | 7
+COPY | 1 | null | null | null | false
+RATING | 25006754 | 4
+RATING | 25006739 | 3
+BOOK | 1006 | A Study in Scarlet | Arthur Conan Doyle | Aisle 2 / Shelf A | Mystery | 10
+COPY | 1 | null | null | null | false
+COPY | 2 | null | null | null | false
+RATING | 25006754 | 3
+BOOK | 1007 | Pride and Prejudice | Jane Austen | Aisle 2 / Shelf B | Romance | 9
+COPY | 1 | null | null | null | false
+BOOK | 1008 | The Notebook | Nicholas Sparks | Aisle 2 / Shelf B | Romance | 5
+COPY | 1 | null | null | null | false
+BOOK | 1009 | 1984 | George Orwell | Aisle 3 / Shelf A | Classic | 14
+COPY | 1 | 25006739 | 2026-05-27 | 2026-06-03 | false
+COPY | 2 | null | null | null | false
+RATING | 25006805 | 4
+RATING | 25006739 | 5
+BOOK | 1010 | To Kill a Mockingbird | Harper Lee | Aisle 3 / Shelf A | Classic | 11
+COPY | 1 | null | null | null | false
+RATING | 25006805 | 4
+BOOK | 1011 | Sapiens | Yuval Noah Harari | Aisle 3 / Shelf B | Non-Fiction | 16
+COPY | 1 | null | null | null | false
+COPY | 2 | null | null | null | false
+RATING | 25006001 | 4
+RATING | 25006757 | 5
+BOOK | 1012 | Thinking, Fast and Slow | Daniel Kahneman | Aisle 3 / Shelf B | Non-Fiction | 9
+COPY | 1 | null | null | null | false
+RATING | 25006001 | 5
+BOOK | 1013 | It | Stephen King | Aisle 4 / Shelf A | Horror | 10
+COPY | 1 | null | null | null | false
+RATING | 25006754 | 5
+BOOK | 1014 | The Shining | Stephen King | Aisle 4 / Shelf A | Horror | 8
+COPY | 1 | null | null | null | false
+BOOK | 1015 | The Da Vinci Code | Dan Brown | Aisle 4 / Shelf B | Thriller | 14
+COPY | 1 | 25006001 | 2026-06-04 | 2026-06-11 | false
+COPY | 2 | 25006805 | 2026-06-06 | 2026-06-13 | false
+RATING | 25006754 | 4
+RATING | 25006739 | 4
+BOOK | 1016 | Gone Girl | Gillian Flynn | Aisle 4 / Shelf B | Thriller | 6
+COPY | 1 | null | null | null | false
+RATING | 25006754 | 4
+RATING | 25006739 | 4
+BOOK | 1017 | Guns, Germs, and Steel | Jared Diamond | Aisle 5 / Shelf A | History | 7
+COPY | 1 | null | null | null | false
+RATING | 25006757 | 4
+BOOK | 1018 | A Short History of Nearly Everything | Bill Bryson | Aisle 5 / Shelf A | History | 5
+COPY | 1 | null | null | null | false
+RATING | 25006757 | 4
+BOOK | 1019 | Meditations | Marcus Aurelius | Aisle 5 / Shelf B | Philosophy | 6
+COPY | 1 | null | null | null | false
+BOOK | 1020 | Steve Jobs | Walter Isaacson | Aisle 5 / Shelf B | Biography | 8
+COPY | 1 | null | null | null | false
