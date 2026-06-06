@@ -7,21 +7,22 @@ import java.util.Map;
  * ============================================================
  * TASK 1 / TASK 3  –  Binary Search Tree (BST) Catalogue
  * ============================================================
- * Primary index : BST keyed by ISBN  →  O(log n) lookup
- * Secondary indexes (Option B HashMaps):
- *   titleIndex  : lowercase-title  → ISBN   O(1) exact / O(k) partial
- *   authorIndex : lowercase-author → List<ISBN>   (one author, many books)
+ * Primary index  : BST keyed by ISBN              O(log n)
+ * Secondary indexes (HashMaps):
+ *   titleIndex  : lowercase title  → ISBN         O(1) exact / O(k) partial
+ *   authorIndex : lowercase author → List<ISBN>
+ *   genreIndex  : lowercase genre  → List<ISBN>   O(1) genre lookup
  *
- * Both maps are kept in sync on every insert / remove.
+ * All three maps stay in sync on every insert / remove.
  * ============================================================
  */
 public class BookBST {
 
     private Book root;
 
-    // Secondary indexes
     private final Map<String, Integer>       titleIndex  = new HashMap<>();
     private final Map<String, List<Integer>> authorIndex = new HashMap<>();
+    private final Map<String, List<Integer>> genreIndex  = new HashMap<>();
 
     // ---------------------------------------------------------
     // INSERT
@@ -33,7 +34,7 @@ public class BookBST {
 
     private Book insertRecursive(Book node, Book book) {
         if (node == null) return book;
-        if (book.isbn < node.isbn) node.left  = insertRecursive(node.left,  book);
+        if (book.isbn < node.isbn)      node.left  = insertRecursive(node.left,  book);
         else if (book.isbn > node.isbn) node.right = insertRecursive(node.right, book);
         // duplicate isbn: silently ignore
         return node;
@@ -41,17 +42,23 @@ public class BookBST {
 
     private void addToIndex(Book book) {
         titleIndex.put(book.title.toLowerCase(), book.isbn);
-        authorIndex
-            .computeIfAbsent(book.author.toLowerCase(), k -> new ArrayList<>())
-            .add(book.isbn);
+        authorIndex.computeIfAbsent(book.author.toLowerCase(), k -> new ArrayList<>()).add(book.isbn);
+        genreIndex .computeIfAbsent(book.genre.toLowerCase(),  k -> new ArrayList<>()).add(book.isbn);
     }
 
     private void removeFromIndex(Book book) {
         titleIndex.remove(book.title.toLowerCase());
+
         List<Integer> byAuthor = authorIndex.get(book.author.toLowerCase());
         if (byAuthor != null) {
             byAuthor.remove(Integer.valueOf(book.isbn));
             if (byAuthor.isEmpty()) authorIndex.remove(book.author.toLowerCase());
+        }
+
+        List<Integer> byGenre = genreIndex.get(book.genre.toLowerCase());
+        if (byGenre != null) {
+            byGenre.remove(Integer.valueOf(book.isbn));
+            if (byGenre.isEmpty()) genreIndex.remove(book.genre.toLowerCase());
         }
     }
 
@@ -63,14 +70,14 @@ public class BookBST {
     }
 
     private Book searchRecursive(Book node, int isbn) {
-        if (node == null)          return null;
-        if (isbn == node.isbn)     return node;
-        if (isbn < node.isbn)      return searchRecursive(node.left,  isbn);
+        if (node == null)      return null;
+        if (isbn == node.isbn) return node;
+        if (isbn < node.isbn)  return searchRecursive(node.left,  isbn);
         return searchRecursive(node.right, isbn);
     }
 
     // ---------------------------------------------------------
-    // SEARCH by Title  (secondary index, O(1) exact + O(k) partial)
+    // SEARCH by Title  (secondary index, O(1) exact / O(k) partial)
     // ---------------------------------------------------------
     public List<Book> searchByTitle(String query) {
         List<Book> results = new ArrayList<>();
@@ -102,6 +109,21 @@ public class BookBST {
     }
 
     // ---------------------------------------------------------
+    // SEARCH by Genre  (secondary index, O(1) exact genre lookup)
+    // ---------------------------------------------------------
+    public List<Book> searchByGenre(String genre) {
+        List<Book> results = new ArrayList<>();
+        List<Integer> isbns = genreIndex.get(genre.toLowerCase());
+        if (isbns != null) {
+            for (int isbn : isbns) {
+                Book b = search(isbn);
+                if (b != null) results.add(b);
+            }
+        }
+        return results;
+    }
+
+    // ---------------------------------------------------------
     // REMOVE
     // ---------------------------------------------------------
     public void remove(int isbn) {
@@ -117,19 +139,20 @@ public class BookBST {
         } else if (isbn > node.isbn) {
             node.right = removeRecursive(node.right, isbn);
         } else {
-            // Found – three cases
             if (node.left  == null) return node.right;
             if (node.right == null) return node.left;
 
-            // Two children: replace with in-order successor (leftmost of right subtree)
-            Book successor = findMin(node.right);
-            node.isbn     = successor.isbn;
-            node.title    = successor.title;
-            node.author   = successor.author;
-            node.location = successor.location;
-            node.copies   = successor.copies;
-            node.waitlist = successor.waitlist;
-            node.right    = removeRecursive(node.right, successor.isbn);
+            // Two children: replace with in-order successor
+            Book successor    = findMin(node.right);
+            node.isbn         = successor.isbn;
+            node.title        = successor.title;
+            node.author       = successor.author;
+            node.location     = successor.location;
+            node.genre        = successor.genre;
+            node.borrowCount  = successor.borrowCount;
+            node.copies       = successor.copies;
+            node.waitlist     = successor.waitlist;
+            node.right        = removeRecursive(node.right, successor.isbn);
         }
         return node;
     }
@@ -140,7 +163,7 @@ public class BookBST {
     }
 
     // ---------------------------------------------------------
-    // Collect all books in sorted ISBN order (for persistence)
+    // Collect all books in sorted ISBN order (for persistence + hottest)
     // ---------------------------------------------------------
     public void getAllBooks(List<Book> list) {
         collectInOrder(root, list);

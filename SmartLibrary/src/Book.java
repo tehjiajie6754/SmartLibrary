@@ -23,7 +23,9 @@ public class Book {
     int    isbn;
     String title;
     String author;
-    String location;      // e.g. "Aisle 2 / Shelf B"
+    String location;
+    String genre;
+    int    borrowCount;   // total times this book has ever been borrowed
 
     // --- Multiple physical copies ---
     List<Copy>    copies;
@@ -35,15 +37,17 @@ public class Book {
     Book left;
     Book right;
 
-    public Book(int isbn, String title, String author, String location) {
-        this.isbn     = isbn;
-        this.title    = title;
-        this.author   = author;
-        this.location = location;
-        this.copies   = new ArrayList<>();
-        this.waitlist = new LinkedList<>();
-        this.left     = null;
-        this.right    = null;
+    public Book(int isbn, String title, String author, String location, String genre) {
+        this.isbn        = isbn;
+        this.title       = title;
+        this.author      = author;
+        this.location    = location;
+        this.genre       = genre;
+        this.borrowCount = 0;
+        this.copies      = new ArrayList<>();
+        this.waitlist    = new LinkedList<>();
+        this.left        = null;
+        this.right       = null;
     }
 
     public void addCopy(Copy copy) {
@@ -77,8 +81,8 @@ public class Book {
     @Override
     public String toString() {
         return String.format(
-            "ISBN: %-6d | %-35s | %-22s | Location: %-20s | Available: %d/%d",
-            isbn, title, author, location, availableCount(), totalCopies()
+            "ISBN: %-6d | %-35s | %-22s | %-15s | Location: %-20s | Available: %d/%d | Borrows: %d",
+            isbn, title, author, genre, location, availableCount(), totalCopies(), borrowCount
         );
     }
 }

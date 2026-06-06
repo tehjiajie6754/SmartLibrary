@@ -13,7 +13,7 @@ public interface LibraryADT {
     void registerUser(String userId, String name);
 
     // --- Catalogue management (Admin) ---
-    void addBook(int isbn, String title, String author, String location, int quantity);
+    void addBook(int isbn, String title, String author, String location, String genre, int quantity);
     void removeBook(int isbn);
 
     // --- Discovery ---
@@ -32,6 +32,10 @@ public interface LibraryADT {
 
     // --- Reservation queue ---
     void joinWaitlist(String userId, int isbn);
+
+    // --- Analytics ---
+    void displayHottestBooks();
+    void recommendBooks(String userId);
 
     // --- History ---
     void viewHistory();
